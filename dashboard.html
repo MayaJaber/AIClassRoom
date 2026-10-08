@@ -1,0 +1,362 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+<title>Attendance Dashboard</title> <!-- Bootstrap --> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" > <!-- Google Font --> <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" > <style> /* ========================= PAGE ========================= */ body { background: #f1f5ff; font-family: 'Segoe UI', sans-serif; padding: 30px; } /* ========================= MAIN BOX ========================= */ .box { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px #0002; } /* ========================= TITLE ========================= */ .title { color: #0d6efd; font-family: 'Great Vibes', cursive; font-size: 48px; text-align: center; } .subtitle { text-align: center; } /* ========================= SETTINGS ========================= */ .settings-box { background: #f8f9fa; border-radius: 15px; padding: 20px; margin: 20px 0; } .form-label { font-weight: bold; } /* ========================= CAMERA SECTION ========================= */ .camera-section { text-align: center; margin-top: 25px; } .camera-buttons { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; } .camera-buttons .btn { min-width: 150px; } /* ========================= CAMERA ========================= */ #camera { width: 400px; max-width: 100%; border-radius: 15px; margin: 20px auto; display: none; } /* ========================= RESULT ========================= */ #result { font-size: 20px; font-weight: bold; color: #0d6efd; margin-top: 10px; } /* ========================= CLOCK ========================= */ #clock { font-size: 24px; font-weight: bold; color: #212529; margin: 15px 0 25px; } /* ========================= STATUS ========================= */ .status { display: inline-block; padding: 7px 18px; border-radius: 20px; color: white; font-weight: bold; min-width: 90px; } .present { background: #198754; } .late { background: #ffc107; color: #000; } .absent { background: #dc3545; } /* ========================= ATTENDANCE TABLE ========================= */ .table-container { width: 100%; margin: 30px auto 0; } .attendance-table { width: 100%; font-size: 18px; margin: auto; } .attendance-table th { font-size: 18px; padding: 16px; } .attendance-table td { padding: 16px; vertical-align: middle; } /* ========================= MOBILE ========================= */ @media (max-width: 600px) { body { padding: 15px; } .box { padding: 20px; } .title { font-size: 40px; } .camera-buttons { flex-direction: column; } .camera-buttons .btn { width: 220px; } .attendance-table { font-size: 14px; } .attendance-table th, .attendance-table td { padding: 10px 5px; } } </style> </head> <body> <div class="box">
+<!-- =========================
+     HEADER
+========================= -->
+
+<div class="text-center">
+
+    <h1 class="title">
+
+        AI Classroom Attendance System
+
+    </h1>
+
+
+    <p class="text-muted subtitle">
+
+        Attendance Dashboard
+
+    </p>
+
+</div>
+
+
+<!-- =========================
+     ATTENDANCE SETTINGS
+========================= -->
+
+<div class="settings-box">
+
+    <h5 class="mb-3">
+
+        Attendance Settings
+
+    </h5>
+
+
+    <div class="row g-3">
+
+
+        <!-- CLASS START -->
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+
+                Class Start Time
+
+            </label>
+
+
+            <input
+                type="time"
+                id="classStartTime"
+                class="form-control"
+                value="02:35"
+            >
+
+        </div>
+
+
+        <!-- LATE TIME -->
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+
+                Late After
+
+            </label>
+
+
+            <input
+                type="time"
+                id="lateTime"
+                class="form-control"
+                value="02:36"
+            >
+
+        </div>
+
+
+        <!-- ABSENT TIME -->
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+
+                Absent After
+
+            </label>
+
+
+            <input
+                type="time"
+                id="absentTime"
+                class="form-control"
+                value="02:45"
+            >
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     CAMERA SECTION
+========================= -->
+
+<div class="camera-section">
+
+
+    <!-- BUTTONS -->
+
+    <div class="camera-buttons">
+
+
+        <button
+            class="btn btn-primary"
+            onclick="startCamera()"
+        >
+
+            Start Camera
+
+        </button>
+
+
+        <button
+            class="btn btn-danger"
+            onclick="stopCamera()"
+        >
+
+            Stop Camera
+
+        </button>
+
+
+        <button
+            class="btn btn-info text-white"
+            onclick="window.open('parent-notifications.html', '_blank')"
+        >
+
+            🔔 Parent Notifications
+
+        </button>
+
+
+    </div>
+
+
+    <!-- CAMERA -->
+
+    <video
+        id="camera"
+        autoplay
+        muted
+    ></video>
+
+
+    <!-- RESULT -->
+
+    <p id="result">
+
+        Camera is off
+
+    </p>
+
+
+    <!-- CLOCK -->
+
+    <p id="clock"></p>
+
+
+</div>
+
+
+<!-- =========================
+     ATTENDANCE TABLE
+========================= -->
+
+<div class="table-container">
+
+    <table
+        class="table table-bordered text-center align-middle attendance-table"
+    >
+
+
+        <thead class="table-primary">
+
+            <tr>
+
+                <th>
+                    Student
+                </th>
+
+                <th>
+                    Date
+                </th>
+
+                <th>
+                    Class Time
+                </th>
+
+                <th>
+                    Arrival
+                </th>
+
+                <th>
+                    Status
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+            <!-- MESSI -->
+
+            <tr id="student-Messi">
+
+                <td>
+
+                    <strong>Messi</strong>
+
+                </td>
+
+
+                <td class="date">
+
+                </td>
+
+
+                <td class="class-time">
+
+                    -
+
+                </td>
+
+
+                <td class="arrival">
+
+                    -
+
+                </td>
+
+
+                <td>
+
+                    <span class="status absent">
+
+                        Absent
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+
+            <!-- GAVI -->
+
+            <tr id="student-Gavi">
+
+                <td>
+
+                    <strong>Gavi</strong>
+
+                </td>
+
+
+                <td class="date">
+
+                </td>
+
+
+                <td class="class-time">
+
+                    -
+
+                </td>
+
+
+                <td class="arrival">
+
+                    -
+
+                </td>
+
+
+                <td>
+
+                    <span class="status absent">
+
+                        Absent
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+
+            <!-- PEDRI -->
+
+            <tr id="student-Pedri">
+
+                <td>
+
+                    <strong>Pedri</strong>
+
+                </td>
+
+
+                <td class="date">
+
+                </td>
+
+
+                <td class="class-time">
+
+                    -
+
+                </td>
+
+
+                <td class="arrival">
+
+                    -
+
+                </td>
+
+
+                <td>
+
+                    <span class="status absent">
+
+                        Absent
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</div> <!-- ========================= FACE API ========================= --> <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js" ></script> <script src="face.js"></script> <!-- ========================= DASHBOARD JAVASCRIPT ========================= --> <script> function updateClock() { const now = new Date(); document.getElementById("clock").textContent = now.toLocaleTimeString( [], { hour: "2-digit", minute: "2-digit", second: "2-digit" } ); } setInterval( updateClock, 1000 ); updateClock(); function updateTableDate() { const now = new Date(); const date = now.toLocaleDateString(); document .querySelectorAll(".date") .forEach(element => { element.textContent = date; }); } function updateClassTimes() { const time = document .getElementById("classStartTime") .value; document .querySelectorAll(".class-time") .forEach(element => { element.textContent = time; }); } document .getElementById("classStartTime") .addEventListener( "change", updateClassTimes ); updateTableDate(); updateClassTimes(); </script> </body> </html>
