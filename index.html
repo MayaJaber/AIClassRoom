@@ -1,0 +1,201 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>AI Classroom Attendance System</title> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"> <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <style> *{ margin:0; padding:0; box-sizing:border-box; } body{ min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px; overflow:hidden; font-family:'Segoe UI',sans-serif; position:relative; background: radial-gradient( circle at 50% 45%, #168cff 0%, #0d5fc7 28%, #073b78 58%, #02152e 100% ); } /* BACKGROUND GLOW */ .glow{ position:absolute; width:650px; height:650px; border-radius:50%; background: radial-gradient( circle, rgba(56,183,255,.32), rgba(13,110,253,.12) 45%, transparent 70% ); filter:blur(20px); animation:glowMove 9s ease-in-out infinite; pointer-events:none; } @keyframes glowMove{ 0%,100%{ transform:translate(-180px,-100px); } 50%{ transform:translate(180px,100px); } } /* FLOATING GRADUATION CAPS */ .caps{ position:absolute; inset:0; overflow:hidden; pointer-events:none; } .cap{ position:absolute; color:#63c5ff; opacity:.3; filter: drop-shadow(0 0 8px #168cff) drop-shadow(0 0 20px #168cff); animation:flyCap linear infinite; } .cap:nth-child(1){ left:4%; animation-duration:14s; animation-delay:-2s; font-size:32px; } .cap:nth-child(2){ left:15%; animation-duration:18s; animation-delay:-8s; font-size:48px; } .cap:nth-child(3){ left:27%; animation-duration:13s; animation-delay:-5s; font-size:28px; } .cap:nth-child(4){ left:40%; animation-duration:17s; animation-delay:-11s; font-size:38px; } .cap:nth-child(5){ left:54%; animation-duration:15s; animation-delay:-4s; font-size:50px; } .cap:nth-child(6){ left:67%; animation-duration:19s; animation-delay:-9s; font-size:31px; } .cap:nth-child(7){ left:79%; animation-duration:14s; animation-delay:-6s; font-size:44px; } .cap:nth-child(8){ left:91%; animation-duration:16s; animation-delay:-12s; font-size:27px; } @keyframes flyCap{ 0%{ transform: translateY(110vh) translateX(0) rotate(-30deg) scale(.6); opacity:0; } 10%{ opacity:.35; } 35%{ transform: translateY(45vh) translateX(80px) rotate(20deg) scale(1); } 65%{ transform: translateY(0) translateX(-70px) rotate(-20deg) scale(.9); } 100%{ transform: translateY(-120vh) translateX(50px) rotate(35deg) scale(.6); opacity:0; } } /* LOGIN CARD */ .login-card{ width:100%; max-width:900px; position:relative; z-index:10; padding:34px 42px; border-radius:30px; background:rgba(255,255,255,.97); border: 2px solid rgba(87,181,255,.25); box-shadow: 0 35px 100px rgba(0,0,0,.55), 0 0 60px rgba(0,145,255,.25); animation:cardEnter .8s ease; transition:transform .2s ease; text-align:center; } @keyframes cardEnter{ from{ opacity:0; transform: translateY(40px) scale(.94); } to{ opacity:1; transform: translateY(0) scale(1); } } /* HEADER */ .header{ text-align:center; margin-bottom:22px; } /* LOGO */ .logo{ width:75px; height:75px; margin:0 auto 13px; display:flex; justify-content:center; align-items:center; border-radius:22px; color:white; font-size:36px; background: linear-gradient( 135deg, #168cff, #0757b8 ); box-shadow: 0 12px 35px rgba(13,110,253,.5), inset 0 1px 1px rgba(255,255,255,.35); animation:logoFloat 3s ease-in-out infinite; } @keyframes logoFloat{ 0%,100%{ transform: translateY(0) rotate(-2deg); } 50%{ transform: translateY(-7px) rotate(2deg); } } /* TITLE */ .title{ color:#086bd5; font-family:'Great Vibes',cursive; font-size:47px; line-height:1; margin-bottom:5px; text-align:center; text-shadow: 0 3px 10px rgba(13,110,253,.18); } .subtitle{ color:#6c757d; font-size:14px; margin:0; text-align:center; } /* ONLINE STATUS */ .online{ width:max-content; margin: 12px auto 22px; padding: 7px 16px; border-radius:50px; display:flex; justify-content:center; align-items:center; gap:8px; background:#e6f4ff; color:#0874d1; border: 1px solid #b8e1ff; font-size:11px; font-weight:bold; } .online-dot{ width:8px; height:8px; border-radius:50%; background:#168cff; box-shadow: 0 0 10px #168cff; animation:pulse 1.5s infinite; } @keyframes pulse{ 0%,100%{ transform:scale(1); opacity:1; } 50%{ transform:scale(.6); opacity:.5; } } /* FORM */ .login-form{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px 22px; text-align:left; } .form-group{ position:relative; } .form-group.full{ grid-column:1 / -1; } .form-label{ display:block; font-weight:700; color:#174a7a; font-size:14px; margin-bottom:7px; } .input-wrapper{ position:relative; } .input-icon{ position:absolute; left:16px; top:50%; transform: translateY(-50%); color:#0d7ee8; font-size:18px; z-index:2; } .form-control{ height:52px; padding-left:46px; border-radius:13px; border: 2px solid #cfe8ff; background:#f4faff; color:#16466f; transition:.3s; } .form-control::placeholder{ color:#8ba8c0; } .form-control:hover{ border-color:#78bfff; background:white; } .form-control:focus{ background:white; border-color:#168cff; box-shadow: 0 0 0 4px rgba(22,140,255,.12), 0 8px 25px rgba(13,110,253,.1); outline:none; } /* BOTTOM ROW */ .bottom-row{ grid-column:1 / -1; display:grid; grid-template-columns: 1fr 1fr; gap:22px; align-items:end; } /* SECURITY */ .security{ height:52px; display:flex; justify-content:center; align-items:center; border-radius:13px; background:#eef8ff; color:#4f708d; font-size:12px; border: 1px solid #d2ebff; text-align:center; } .security i{ color:#168cff; margin-right:5px; } /* LOGIN BUTTON */ .btn-login{ height:52px; border:none; border-radius:13px; font-size:15px; font-weight:bold; color:white; background: linear-gradient( 110deg, #0757b8, #0d6efd, #168cff, #0757b8 ); background-size:300% 100%; animation: buttonMove 5s linear infinite; box-shadow: 0 10px 28px rgba(13,110,253,.4); transition:.3s; } @keyframes buttonMove{ 0%{ background-position:0% 50%; } 100%{ background-position:300% 50%; } } .btn-login:hover{ transform:translateY(-3px); box-shadow: 0 17px 38px rgba(13,110,253,.55); background: linear-gradient( 110deg, #168cff, #0d6efd, #0757b8 ); } .btn-login:active{ transform: translateY(0) scale(.98); } /* FOOTER */ .footer{ text-align:center; margin-top:20px; color:#7d9ab2; font-size:11px; } /* MOBILE */ @media(max-width:700px){ body{ padding:12px; overflow-y:auto; } .login-card{ padding:28px 20px; border-radius:24px; } .title{ font-size:39px; } .login-form{ grid-template-columns:1fr; } .form-group.full{ grid-column:auto; } .bottom-row{ grid-column:auto; grid-template-columns:1fr; } .logo{ width:68px; height:68px; font-size:32px; } } </style> </head> <body> <!-- BACKGROUND --> <div class="glow"></div> <!-- FLOATING CAPS --> <div class="caps">
+<i class="bi bi-mortarboard-fill cap"></i>
+
+<i class="bi bi-mortarboard-fill cap"></i>
+
+<i class="bi bi-mortarboard-fill cap"></i>
+
+<i class="bi bi-mortarboard-fill cap"></i>
+
+<i class="bi bi-mortarboard-fill cap"></i>
+
+<i class="bi bi-mortarboard-fill cap"></i>
+
+<i class="bi bi-mortarboard-fill cap"></i>
+
+<i class="bi bi-mortarboard-fill cap"></i>
+
+</div> <!-- LOGIN CARD --> <div class="login-card" id="loginCard" >
+<!-- HEADER -->
+
+<div class="header">
+
+
+    <div class="logo">
+
+        <i class="bi bi-mortarboard-fill"></i>
+
+    </div>
+
+
+    <h2 class="title">
+
+        AI Classroom Attendance System
+
+    </h2>
+
+
+    <p class="subtitle">
+
+        Welcome!
+
+    </p>
+
+
+    <div class="online">
+
+        <span class="online-dot"></span>
+
+        AI Attendance System Online
+
+    </div>
+
+
+</div>
+
+
+<!-- LOGIN FORM -->
+
+<form
+    id="loginForm"
+    class="login-form"
+>
+
+
+    <!-- SCHOOL -->
+
+    <div class="form-group">
+
+        <label class="form-label">
+
+            School Name
+
+        </label>
+
+
+        <div class="input-wrapper">
+
+            <i
+                class="bi bi-building input-icon"
+            ></i>
+
+
+            <input
+                type="text"
+                class="form-control"
+                placeholder="Enter School Name"
+                required
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- TEACHER -->
+
+    <div class="form-group">
+
+        <label class="form-label">
+
+            Teacher Name
+
+        </label>
+
+
+        <div class="input-wrapper">
+
+            <i
+                class="bi bi-person-fill input-icon"
+            ></i>
+
+
+            <input
+                type="text"
+                id="teacherName"
+                class="form-control"
+                placeholder="Enter Teacher Name"
+                required
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- PASSWORD -->
+
+    <div class="form-group full">
+
+        <label class="form-label">
+
+            Administrative Password
+
+        </label>
+
+
+        <div class="input-wrapper">
+
+            <i
+                class="bi bi-shield-lock-fill input-icon"
+            ></i>
+
+
+            <input
+                type="password"
+                id="password"
+                class="form-control"
+                placeholder="Enter Password"
+                required
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- BOTTOM -->
+
+    <div class="bottom-row">
+
+
+        <div class="security">
+
+            <span>
+
+                <i class="bi bi-shield-check"></i>
+
+                Secure Administrative Access
+
+            </span>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="btn btn-login"
+        >
+
+            <i class="bi bi-box-arrow-in-right"></i>
+
+            Login
+
+        </button>
+
+
+    </div>
+
+
+</form>
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+    © 2026 AI Classroom Attendance System
+
+</div>
+
+</div> <script> /* LOGIN */ const form = document.getElementById("loginForm"); form.onsubmit = function(e){ e.preventDefault(); const teacher = document .getElementById("teacherName") .value .trim(); const password = document .getElementById("password") .value; if(password === "admin123"){ localStorage.setItem( "teacherName", teacher ); Swal.fire({ icon:"success", title:"Welcome!", text: `Hello, ${teacher} 👋`, confirmButtonText: "Continue", confirmButtonColor: "#0d6efd", borderRadius: "15px" }).then(() => { window.location.href = "dashboard.html"; }); }else{ Swal.fire({ icon:"error", title:"Access Denied", text: "Incorrect Administrative Password", confirmButtonColor: "#dc3545" }); } }; /* MOUSE EFFECT */ const card = document.getElementById("loginCard"); document.addEventListener( "mousemove", function(e){ const x = ( window.innerWidth / 2 - e.clientX ) / 140; const y = ( window.innerHeight / 2 - e.clientY ) / 140; card.style.transform = `perspective(1200px) rotateY(${x}deg) rotateX(${y}deg)`; } ); /* RESET EFFECT */ document.addEventListener( "mouseleave", function(){ card.style.transform = "perspective(1200px) rotateY(0deg) rotateX(0deg)"; } ); </script> </body> </html>
