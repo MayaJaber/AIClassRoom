@@ -18,7 +18,28 @@ async function startCamera() {
 
 try {
 
-    result.textContent = "Loading AI...";
+    result.textContent = "Initializing AI...";
+
+    // Initialize TensorFlow backend before loading AI models
+    if (faceapi.tf) {
+        try {
+            await faceapi.tf.setBackend("webgl");
+            await faceapi.tf.ready();
+        } catch (webglError) {
+            console.warn("WebGL unavailable. Trying CPU backend.");
+
+            await faceapi.tf.setBackend("cpu");
+            await faceapi.tf.ready();
+        }
+
+        console.log(
+            "TensorFlow backend:",
+            faceapi.tf.getBackend()
+        );
+    }
+
+    result.textContent = "Loading AI models...";
+
 
     // Reset attendance
     students = [];
